@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension version="2.5" type="plugin" group="user" method="upgrade">
+	<name>Welcome Message</name>
+	<author>Team Joomlaxi</author>
+	<creationDate>June 2010</creationDate>
+	<authorEmail>shyam@joomlaxi.com</authorEmail>
+	<version>2.2</version>
+<description>Shows Welcome message when user logged in first time at your site.If you want to display user's Name, UserName, Site Name, site URL and any Custome URL than use plugin keyword [[NAME]], [[USERNAME]], [[SITENAME]], [[SITEURL]] and [[CUSTOMURL]] respectively.</description>
+	<files>
+		<filename plugin="welcomemessage">welcomemessage.php</filename>
+		<folder>welcomemessage</folder>
+	</files>
+	
+	<config>
+		<fields name="params" addfieldpath="/plugins/user/welcomemessage/welcomemessage/fields">
+			<fieldset name="basic">
+				<field name="EnqueueMessage" type="radio" default="0" label="EnqueueMessage" class="btn-group" description="Select 'Yes' if you want to show message on screen else select 'No'.">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+				</field>
+				<field name="PersonalMessage" type="radio" default="0" label="Personal Message" class="btn-group" description="Select 'Yes' if you want to show message in Inbox else select 'No'.">
+						<option value="1">Yes</option>
+						<option value="0">No</option>
+				</field>
+				<field name="Email" type="radio" default="0" label="Email" class="btn-group" description="Select 'Yes' if you want to send Email else select 'No'.">
+						<option value="1">Yes</option>
+						<option value="0">No</option>
+				</field>
+				 <field
+					name="Subject for user who do not have Profiletype"
+					description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+					type="spacer" />
+				<field name="subject" type="textarea" rows="5" cols="40" default="" label=''/>
+			    <field
+					name="Subject for each Profiletype"
+					description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+					type="spacer" />
+				<field id="ptypesubject" name="ptypesubject" type="ptypesubject" label="" />
+				 <field
+					name="Message for user who do not have Profiletype"
+					description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+					type="spacer" />
+				<field name="message" type="textarea" rows="5" cols="40" default="" label=''/>
+				    <field
+					name="Message for each Profiletype"
+					description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+					type="spacer" />
+				<field id="ptypemessage" name="ptypemessage" type="ptypemessage" label="" />
+				 <field
+					name="Custom URL you want to show to user"
+					description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+					type="spacer" />
+				<field name="customurl" type="text"  default="" label=''/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
