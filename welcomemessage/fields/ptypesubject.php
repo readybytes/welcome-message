@@ -3,6 +3,10 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+if(!defined('DS')){
+    define('DS',DIRECTORY_SEPARATOR);
+}
+
 class JFormFieldPtypesubject extends JFormField
 {
 	public $type = 'Ptypesubject';
