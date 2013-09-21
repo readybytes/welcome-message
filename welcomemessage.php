@@ -7,6 +7,9 @@ define('PERSONALMESSAGE',1);
 define('EMAIL',1);
 $version = new JVersion();
 //define('WLCM_JOOMLA_15',($version->RELEASE === '1.5'));
+if(!defined('DS')){
+    define('DS',DIRECTORY_SEPARATOR);
+}
 
 class plgUserWelcomeMessage extends JPlugin
 {
