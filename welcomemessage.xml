@@ -4,7 +4,7 @@
 	<author>Team Joomlaxi</author>
 	<creationDate>June 2010</creationDate>
 	<authorEmail>shyam@joomlaxi.com</authorEmail>
-	<version>2.3</version>
+	<version>2.4</version>
 <description>Shows Welcome message when user logged in first time at your site.If you want to display user's Name, UserName, Site Name, site URL and any Custome URL than use plugin keyword [[NAME]], [[USERNAME]], [[SITENAME]], [[SITEURL]] and [[CUSTOMURL]] respectively.</description>
 	<files>
 		<filename plugin="welcomemessage">welcomemessage.php</filename>
