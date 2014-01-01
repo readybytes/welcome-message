@@ -3,6 +3,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+jimport( 'joomla.filesystem.folder');
+
 if(!defined('DS')){
     define('DS',DIRECTORY_SEPARATOR);
 }
@@ -22,7 +24,7 @@ class JFormFieldPtypesubject extends JFormField
 					$db->setQuery("SELECT `params` FROM `#__extensions` WHERE `folder`='user' AND `element`='welcomemessage' ");
 					$params = $db->loadResult();
 					
-					$pSubObject =  json_decode($params);
+					$pSubObject =  new JRegistry($params);
 			
 					$fieldsHtml = $this->getFieldsHtml($pSubObject,$this->fieldname, $this->value, $this->element, $this->name);
 			}

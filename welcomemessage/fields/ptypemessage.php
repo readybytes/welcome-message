@@ -4,6 +4,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+jimport( 'joomla.filesystem.folder');
+
 class JFormFieldPtypemessage extends JFormField
 {
 	public $type = 'Ptypemessage';
@@ -19,7 +21,7 @@ class JFormFieldPtypemessage extends JFormField
 					$db->setQuery("SELECT `params` FROM `#__extensions` WHERE `folder`='user' AND `element`='welcomemessage' ");
 					$params = $db->loadResult();
 				
-					$pMsgObject = json_decode($params);
+					$pMsgObject = new JRegistry($params);
 			//		$pMsgObject = new JParameter($params);
 				
 					$fieldsHtml = $this->getFieldsHtml($pMsgObject,$this->fieldname, $this->value, $this->element, $this->name);

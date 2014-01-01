@@ -2,11 +2,8 @@
 defined('_JEXEC') or die( 'Restricted access' );
 
 jimport( 'joomla.plugin.plugin' );
-define('ONSCREENMESSAGE',1);
-define('PERSONALMESSAGE',1);
-define('EMAIL',1);
-$version = new JVersion();
-//define('WLCM_JOOMLA_15',($version->RELEASE === '1.5'));
+jimport( 'joomla.filesystem.folder' );
+
 if(!defined('DS')){
     define('DS',DIRECTORY_SEPARATOR);
 }
@@ -47,10 +44,10 @@ class plgUserWelcomeMessage extends JPlugin
 	function sendMessage($userid,$subject,$message,$emessage,$permessage,$email)
 	{
 		$mainframe = JFactory::getApplication();
-		if($emessage == ONSCREENMESSAGE){
+		if($emessage){
 			$mainframe->enqueueMessage($message);
 		}
-		if($permessage == PERSONALMESSAGE){
+		if($permessage){
 			
 			$jspath = JPATH_ROOT.DS.'components'.DS.'com_community';
 			include_once($jspath.DS.'libraries'.DS.'core.php');
@@ -69,7 +66,7 @@ class plgUserWelcomeMessage extends JPlugin
             CFactory::loadUsers(array("$userid"));	
 			CUserPoints::assignPoint('inbox.message.send');
 		}
-		if($email == EMAIL){
+		if($email){
 			$mailer	= JFactory::getMailer();
 			$email  = JFactory::getUser($userid)->email;
 			$mailer->addRecipient($email);
@@ -141,36 +138,22 @@ class plgUserWelcomeMessage extends JPlugin
 	function _isPluginInstalledAndEnabled()
 	{
 		$db = JFactory::getDBO();
-		if(WLCM_JOOMLA_15){
-			$query = "SELECT * FROM `#__plugins` WHERE `element` = 'xipt_community' ";
-			$db->setQuery($query);
-	    	$communityPlugin = $db->loadObject();
-			if(!$communityPlugin || $communityPlugin->published == 0)
-				return false;
-		}
-		else{
-			$query = "SELECT * FROM `#__extensions` WHERE `element` = 'xipt_community' ";
-			$db->setQuery($query);
-	    	$communityPlugin = $db->loadObject();
-			if(!$communityPlugin || $communityPlugin->enabled == 0)
+		$query = "SELECT * FROM `#__extensions` WHERE `element` = 'xipt_community' ";
+		$db->setQuery($query);
+    	$communityPlugin = $db->loadObject();
+		if(!$communityPlugin || $communityPlugin->enabled == 0)
+		{
 			return false;
-		}	
+		}			
 		
-				
-		if(WLCM_JOOMLA_15){	
-			$query= "SELECT * FROM `#__plugins` WHERE `element` = 'xipt_system' ";
-			$db->setQuery($query);
-		    $systemPlugin = $db->loadObject();
-			if(!$systemPlugin || $systemPlugin->published == 0)
-				return false;
-		}
-		else{
-			$query = "SELECT * FROM `#__extensions` WHERE `element` = 'xipt_system' ";
-			$db->setQuery($query);
-		    $systemPlugin = $db->loadObject();
-			if(!$systemPlugin || $systemPlugin->enabled == 0)
-				return false;
-		}
+		
+		$query = "SELECT * FROM `#__extensions` WHERE `element` = 'xipt_system' ";
+		$db->setQuery($query);
+	    $systemPlugin = $db->loadObject();
+		if(!$systemPlugin || $systemPlugin->enabled == 0)
+		{
+			return false;
+		}		
 		return true;
 	}
 	
@@ -187,7 +170,7 @@ class plgUserWelcomeMessage extends JPlugin
 			
 		$plugin 	   = JPluginHelper::getPlugin('user', 'welcomemessage');
 		
- 		$params 	   = json_decode($plugin->params);
+ 		$params 	   = new JRegistry($plugin->params); 
  	
  		$lastvisitdate = JFactory::getUser($userid)->lastvisitDate;
 		$block		   = JFactory::getUser($userid)->block;
@@ -202,9 +185,9 @@ class plgUserWelcomeMessage extends JPlugin
 					require_once (JPATH_ROOT. DS.'components'.DS.'com_xipt'.DS.'api.xipt.php');
 					$pID = XiptAPI::getUserInfo($userid,'PROFILETYPE');	
 					
-						$ptsubject = $params->ptypesubject ? $params->ptypesubject: '';
+						$ptsubject = $params->get('ptypesubject', '');
 						$subject	= $ptsubject->$pID;
-						$ptmessage  = $params->ptypemessage ? $params->ptypemessage: '';
+						$ptmessage  = $params->get('ptypemessage', '');
 						$message	= $ptmessage->$pID;
 					
 	          	}
@@ -214,19 +197,18 @@ class plgUserWelcomeMessage extends JPlugin
 	          	}
 			}
 			else{
-				$subject  = $params->subject? $params->subject: '';	
-				$message  = $params->message? $params->message: '';
+				$subject  = $params->get('subject', '');	
+				$message  = $params->get('message', '');
 			}
 				
 			//$message.= $this->getMessage($userid);
-			$emessage   = $params->EnqueueMessage;
-			$permessage = $params->PersonalMessage;
-			$email      = $params->Email;
-			$customurl  = $params->customurl;
+			$emessage   = $params->get('EnqueueMessage', false);
+			$permessage = $params->get('PersonalMessage',false);
+			$email      = $params->get('Email', false);
+			$customurl  = $params->get('customurl', false);
 			$subject    = $this->editMessage($userid,$subject,$customurl);
 			$message    = $this->editMessage($userid,$message,$customurl);
  			$this->sendMessage($userid,$subject,$message,$emessage,$permessage,$email);
 		}	
 	}
 }
-
